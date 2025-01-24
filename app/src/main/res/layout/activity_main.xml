@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:id="@+id/main">
-
+    >
 
     <!-- RecyclerView for displaying chat messages -->
     <androidx.recyclerview.widget.RecyclerView
