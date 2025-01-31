@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://your-flask-server-ip:5000")  // Use your Flask server URL
+                .baseUrl("https://4e11-81-101-99-13.ngrok-free.app")  // Use your Flask server URL
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<AiResponse> call, Response<AiResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String aiResponse = response.body().getResponse();
-                    messageList.add("AI: " + aiResponse);
+                    messageList.add("LUNA : " + aiResponse);
                     chatAdapter.notifyItemInserted(messageList.size() - 1);
                     recyclerView.scrollToPosition(messageList.size() - 1);
                 }
