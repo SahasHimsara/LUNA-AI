@@ -28,6 +28,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         String message = messageList.get(position);
         holder.textViewMessage.setText(message);
+
+        // Apply different styling based on sender
+        if (message.startsWith("👤")) {
+            holder.textViewMessage.setBackgroundResource(R.drawable.user_message_background);
+        } else {
+            holder.textViewMessage.setBackgroundResource(R.drawable.bot_message_background);
+        }
     }
 
     @Override
