@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://6d92-81-101-99-13.ngrok-free.app")  // Use your Flask server URL
+                .baseUrl("https://d5f5-81-101-99-13.ngrok-free.app")  // Always Use new flask server URL
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
                     messageList.add("🤖 : " + aiResponse);
                     chatAdapter.notifyItemInserted(messageList.size() - 1);
                     recyclerView.scrollToPosition(messageList.size() - 1);
+                }else {
+                    // Handle error response
+                    Toast.makeText(MainActivity.this, "Error in response", Toast.LENGTH_SHORT).show();
                 }
             }
 
