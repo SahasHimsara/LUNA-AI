@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://d5f5-81-101-99-13.ngrok-free.app")  // Always Use new flask server URL
+                .baseUrl("https://b1a7-81-101-99-13.ngrok-free.app")  // Always Use new flask server URL
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

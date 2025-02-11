@@ -28,3 +28,4 @@ class AiResponse {
         return response;
     }
 }
+
