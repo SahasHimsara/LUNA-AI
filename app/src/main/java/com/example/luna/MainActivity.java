@@ -2,13 +2,16 @@ package com.example.luna;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,13 +46,18 @@ public class MainActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(messageList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(chatAdapter);
-
-
+        
         // Initialize Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://b1a7-81-101-99-13.ngrok-free.app")  // Always Use new flask server URL
+                .baseUrl("https://7a2b-81-101-99-13.ngrok-free.app")  // Always Use new flask server URL
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
+        if (retrofit == null) {
+            Log.e("Retrofit", "Retrofit object is null!");
+        } else {
+            Log.d("Retrofit", "Retrofit initialized successfully");
+        }
 
         // Handle send button click
         buttonSend.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        // Fetch chat history after Retrofit initialization
+        fetchChatHistory();
     }
 
     private void sendMessage(String message) {
@@ -88,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     messageList.add("🤖 : " + aiResponse);
                     chatAdapter.notifyItemInserted(messageList.size() - 1);
                     recyclerView.scrollToPosition(messageList.size() - 1);
-                }else {
+                } else {
                     // Handle error response
                     Toast.makeText(MainActivity.this, "Error in response", Toast.LENGTH_SHORT).show();
                 }
@@ -103,6 +113,35 @@ public class MainActivity extends AppCompatActivity {
         // Simulate a response from AI
         //simulateAIResponse();
     }
+
+    private void fetchChatHistory() {
+        ChatApi chatApi = retrofit.create(ChatApi.class);
+        Call<List<chatMessage>> call = chatApi.getChatHistory();
+
+        call.enqueue(new Callback<List<chatMessage>>() {
+            @Override
+            public void onResponse(Call<List<chatMessage>> call, Response<List<chatMessage>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<chatMessage> history = response.body();
+                    for (chatMessage msg : history) {
+                        if ("user".equals(msg.getSender())) {
+                            messageList.add("👤 : " + msg.getMessage());
+                        } else {
+                            messageList.add("🤖 : " + msg.getMessage());
+                        }
+                    }
+                    chatAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(messageList.size() - 1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<chatMessage>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Failed to load chat history", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void simulateAIResponse() {
         String aiResponse = "🤖 : Thanks for your message!";
